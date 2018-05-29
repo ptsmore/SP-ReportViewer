@@ -3,7 +3,7 @@
 <img src="https://github.com/ptsmore/SP-ReportViewer/blob/master/PIC/1.PNG"></img>
 <br>
 <h6>2.Choose Deploy as a farm  </h6>
-<img src="https://github.com/ptsmore/SP-ReportViewer/blob/master/PIC/2.PNG"></img>
+<img src="https://github.com/ptsmore/SP-ReportViewer/blob/master/PIC/2.png"></img>
 <br>
 <h6>3.Add Data set by right click at project</h6>
 <img src="https://github.com/ptsmore/SP-ReportViewer/blob/master/PIC/3.PNG"></img>
