@@ -1,0 +1,160 @@
+using System;
+using System.ComponentModel;
+
+using System.Web.UI.WebControls.WebParts;
+
+using System.Data;
+using System.Configuration;
+using System.Data.SqlClient;
+using Microsoft.Reporting.WebForms;
+using System.Web;
+using Microsoft.SharePoint;
+using Microsoft.SharePoint.WebControls;
+namespace ReportViewer.Report1_2
+{
+    [ToolboxItemAttribute(false)]
+    public partial class Report1_2 : WebPart
+    {
+
+        
+        string author = "";
+        string created_x0020_By = "";
+        string modifiedby = "";
+        string managerPerson = "";
+        string httpQueryString = "";
+        bool isMember = false;
+        string strgroupName = "Admin_Group";
+        string strUserName = "";
+        string strName = "";
+        public Report1_2()
+        {
+
+
+        }
+
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            InitializeControl();
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            SPWeb theSite = SPControl.GetContextWeb(Context);
+            SPUser theUser = theSite.CurrentUser;
+            strUserName = theUser.LoginName;
+            strName = theUser.Name;
+            string strgroupName = "Admin_Group";
+
+            var spGroup = theSite.Groups[strgroupName];
+            isMember = theSite.IsCurrentUserMemberOfGroup(spGroup.ID); 
+
+            httpQueryString = Page.Request.QueryString["param"];
+            if (!Page.IsPostBack)
+            {
+                ReportViewer1.ProcessingMode = ProcessingMode.Local;
+                DataTable dt = CreateDataTableReport();
+                DataTable reportdt = GetItem(dt);
+                bool checkMember = checkMemberInGroup();
+
+                if (checkMember == true)
+                {
+                    ReportViewer1.LocalReport.ReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Report/SPReport1_2.rdlc");
+                }
+                else
+                {
+                    ReportViewer1.LocalReport.ReportPath = System.Web.HttpContext.Current.Server.MapPath("~/Report/ReportPermissonNothing.rdlc");
+
+                }
+                ReportDataSource datasource = new ReportDataSource();
+                datasource.Name = "DataSet1_2";
+                datasource.Value = reportdt;
+                ReportViewer1.LocalReport.DataSources.Clear();
+                ReportViewer1.LocalReport.DataSources.Add(datasource);
+                ReportViewer1.LocalReport.Refresh();
+            }
+
+
+        }
+        public bool checkMemberInGroup()
+        {
+            bool cm = false;
+            try
+            {
+                if (isMember != false)
+                {
+                    cm = true;
+                }
+                else if (created_x0020_By == strUserName)
+                {
+                    cm = true;
+                }
+                else if (managerPerson == strUserName)
+                {
+                    cm = true;
+                }
+                return cm;
+            }
+            catch (Exception)
+            {
+                return cm;
+                
+            }
+           
+            
+        }
+
+        private DataTable CreateDataTableReport()
+        {
+            DataTable dt = new DataTable();
+            
+            dt.Columns.Add("Title");
+            ...
+
+            return dt;
+        }
+
+        private DataTable GetItem(DataTable dtReport)
+        {
+            DataTable listItemsTable = new DataTable();
+            try
+            {
+                SPSecurity.RunWithElevatedPrivileges(delegate()
+                {
+                    using (SPSite site = new SPSite(SPContext.Current.Site.Url))
+                    {
+                        using (SPWeb web = site.OpenWeb())
+                        {
+                            SPList List = web.Lists["WL1_2"];
+                            // Build a query. 
+
+                            SPQuery query = new SPQuery();
+                            query.Query = @"<Where>" +
+                                "<Eq>" +
+                                                "<FieldRef Name='ID' /><Value Type='Number'>" + httpQueryString + "</Value>" +
+                                             "</Eq>" +
+                                          "</Where>";
+                            SPListItemCollection collListItems = List.GetItems(query);
+
+                            DataRow dr;
+                            foreach (SPListItem sp in collListItems)
+                            {
+                                dr = dtReport.NewRow();
+                               
+                                dr["Title"] = sp["Title"];
+                                
+                                ...
+                                dtReport.Rows.Add(dr);
+                               
+                            }
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            { }
+            return dtReport;
+        }
+    }
+}
+
