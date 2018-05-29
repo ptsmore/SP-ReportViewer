@@ -1,4 +1,4 @@
-# SP-ReportViewer
+# Create Simple Reportviewer by sharepoint project
 <h6>1.Create New project  - sharepoint empty project </h6>
 <img src="https://github.com/ptsmore/SP-ReportViewer/blob/master/PIC/1.PNG"></img>
 <br>
@@ -28,7 +28,7 @@
 <h6>9.Choose report1.rdlc </h6>
 <img src="https://github.com/ptsmore/SP-ReportViewer/blob/master/PIC/10.PNG"></img>
 <br>
-<h6>10.Look Example </h6> <a href="https://github.com/ptsmore/SP-ReportViewer/blob/master/Code.txt" target="_blank">CODE</a>
+<h6>10.Look Example <a href="https://github.com/ptsmore/SP-ReportViewer/blob/master/Code.txt" target="_blank">CODE</a> </h6>
 <br>
 <h6>11.Deploy Project to Site and at the sitepage or page, add this webpart </h6>
 
